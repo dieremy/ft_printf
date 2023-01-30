@@ -12,6 +12,27 @@
 
 #include "ft_printf.h"
 
+int	ft_putchar(int c)
+{
+	write(1, &c, 1);
+	return (1);
+}
+
+int	ft_putstr(char *s)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+	{
+		write(1, "(null)", 6);
+		return (6);
+	}
+	while (s[i])
+		i += write(1, &s[i], 1);
+	return (i);
+}
+
 int	ft_output(va_list v, const char ptr)
 {
 	int	out;
@@ -95,3 +116,9 @@ int	ft_printf(char const *ptr, ...)
 
 // }
 */
+
+// int main()
+// {
+// 	printf(" %d \n", printf(" %x ", 0));
+// 	ft_printf(" %d \n", ft_printf(" %x ", 0));
+// }
