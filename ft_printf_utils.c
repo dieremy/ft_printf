@@ -51,42 +51,24 @@ int	ft_length(long nb)
 	return (i);
 }
 
-char	*ft_itoa(int n)
-{
-	char	*new;
-	long	nb;
-	size_t	len;
-
-	nb = n;
-	len = ft_length(nb) + 1;
-	new = (char *)malloc(sizeof(char) * len);
-	if (!new)
-		return (NULL);
-	if (nb < 0)
-	{
-		nb *= -1;
-		new[0] = '-';
-	}
-	new[--len] = '\0';
-	if (nb == 0)
-		new[0] = '0';
-	while (nb > 0)
-	{
-		new[--len] = (nb % 10) + '0';
-		nb /= 10;
-	}
-	return (new);
-}
-
 int	print_int(int n)
 {
-	int		number;
-	char	*str_nb;
+	size_t	len;
 
-	str_nb = ft_itoa(n);
-	number = ft_putstr(str_nb);
-	free(str_nb);
-	return (number);
+	len = ft_length(n);
+	if (n < 0)
+	{
+		n = -n;
+		ft_putchar('-');
+	}
+	if (n > 9)
+	{
+		print_int(n / 10);
+		print_int(n % 10);
+	}
+	else
+		ft_putchar(n + 48);
+	return (len);
 }
 
 int	ft_ulength(unsigned int n)
@@ -102,43 +84,45 @@ int	ft_ulength(unsigned int n)
 	return (i);
 }
 
-char	*ft_uitoa(unsigned int n)
-{
-	char	*new;
-	int		len;
-
-	len = ft_ulength(n) + 1;
-	new = (char *)malloc(sizeof(char) * len);
-	if (!new)
-		return (NULL);
-	new[--len] = 0;
-	while (n)
-	{
-		new[--len] = (n % 10) + 48;
-		n /= 10;
-	}
-	return (new);
-}
-
 int	print_uint(unsigned int n)
 {
-	char			*str_num;
-	unsigned int	num;
+	size_t	ulen;
 
-	if (n == 0)
-		num = ft_putchar(48);
-	str_num = ft_uitoa(n);
-	num = ft_putstr(str_num);
-	free(str_num);
-	return (num);
+	ulen = ft_ulength(n);
+	if (n < 0)
+	{
+		n = -n;
+		ft_putchar('-');
+	}
+	if (n > 9)
+	{
+		print_int(n / 10);
+		print_int(n % 10);
+	}
+	else
+		ft_putchar(n + 48);
+	return (ulen);
 }
 
-int	print_hex(unsigned int n, const char ptr)
+int	len_hex(unsigned int nb)
 {
 	int	i;
 
 	i = 0;
-	if (n > 15 && i++)
+	while (nb)
+	{
+		i++;
+		nb /= 16;
+	}
+	return (i);
+}
+
+int	print_hex(unsigned int n, const char ptr)
+{
+	unsigned int	nb;
+
+	nb = len_hex(n);
+	if (n > 15)
 	{
 		print_hex(n / 16, ptr);
 		print_hex(n % 16, ptr);
@@ -155,5 +139,38 @@ int	print_hex(unsigned int n, const char ptr)
 				ft_putchar('A' + n - 10);
 		}
 	}
+	return (nb);
+}
+int	len_p(uintptr_t nb)
+{
+	int	i;
+
+	i = 0;
+	while (nb)
+	{
+		i++;
+		nb /= 16;
+	}
 	return (i);
+}
+
+int	print_p(uintptr_t n)
+{
+	unsigned int	nb;
+
+	nb = len_hex(n);
+	
+	if (n > 15)
+	{
+		print_p(n / 16);
+		print_p(n % 16);
+	}
+	else
+	{
+		if (n < 10)
+			ft_putchar(48 + n);
+		else
+			ft_putchar('a' + n - 10);
+	}
+	return (nb);
 }
